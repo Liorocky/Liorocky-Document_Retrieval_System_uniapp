@@ -1,10 +1,22 @@
 {
-	"pages": [{
-		"path": "pages/index/index",
-		"style": {
-			"navigationBarTitleText": "uni-app"
-		}
-	}],
+	"pages": [
+		{
+			"path" : "pages/retrieve/retrieve",
+			"style" :                                                                                    
+			{
+				"navigationBarTitleText": "检索",
+				"enablePullDownRefresh": false
+			}
+		},
+        {
+            "path" : "pages/upload/upload",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "录入",
+                "enablePullDownRefresh": false
+            }
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
@@ -13,5 +25,24 @@
 		"app-plus": {
 			"background": "#efeff4"
 		}
+	},
+	"tabBar": {
+		"selectedColor": "#1cbbb4", //选中时的菜单文字颜色
+		"borderStyle": "black",
+		"backgroundColor": "#ffffff", //背景
+		"list": [
+			{
+	            "text": "检索",
+	            "pagePath": "pages/retrieve/retrieve",
+	            "iconPath": "static/tabbar/retrieve.png",  //图标默认
+	            "selectedIconPath": "static/tabbar/retrieve_cur.png"  //页面被点击选中后
+	        },
+			{
+				"text": "录入",
+				"pagePath": "pages/upload/upload",
+				"iconPath": "static/tabbar/upload.png",  //图标默认
+				"selectedIconPath": "static/tabbar/upload_cur.png"  //页面被点击选中后
+			}
+		]
 	}
 }
