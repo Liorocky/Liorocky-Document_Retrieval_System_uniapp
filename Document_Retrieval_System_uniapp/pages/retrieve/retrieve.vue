@@ -3,25 +3,21 @@
 		<view>
 			<uni-search-bar :radius="100" @confirm="search" @input="input" ></uni-search-bar>			
 		</view>
-		<view>
-			<text>常用标签</text>
-			<view class="tags">
-				<uni-tag text="标签"></uni-tag>
-				<uni-tag text="标签" type="error" :circle="true"></uni-tag>
-				<uni-tag text="标签" @click="bindClick"></uni-tag>
-			</view>
-			
-		</view>
-		
-		
+
+	<file-data-word :localdata="data"></file-data-word>
 	</view>
 </template>
 
 <script>
+
 	export default {
 		data() {
 			return {
-				
+				data: [
+				  {fileName: '文档1', filePath: 'www.baidu.com',fileType: 'word'},
+				  {fileName: '文档2', filePath: 'www.baidu.com',fileType: 'word'},
+				  {fileName: '文档3', filePath: 'www.baidu.com',fileType: 'word'}
+				],
 			}
 		},
 		methods: {
