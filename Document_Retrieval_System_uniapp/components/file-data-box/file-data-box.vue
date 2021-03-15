@@ -1,9 +1,9 @@
-<template name="file-data-word">
+<template name="file-data-box">
 	<view>
 		<view v-for="item in localdata">
-			<view class="file-item" @click="previewFile()">
+			<view class="file-item" @click="clickBox(item)">
 				<view class="file-item-icon">
-					<image src="@/static/icon/Word.png" style="width: 96px; height:96px"></image>
+					<image src="@/static/icon/Document.png" style="width: 96px; height:96px"></image>
 				</view>
 				<view class="file-item-name">{{item.fileName}}</view>
 			</view>
@@ -13,7 +13,7 @@
 
 <script>
 export default {
-	name: "file-data-word",
+	name: "file-data-box",
 	//属性
 	props: {
 		localdata: {
@@ -28,8 +28,12 @@ export default {
 	
 	},
 	methods: {
-		previewFile: function(obj){
-			console.log("预览文件")
+		clickBox: function(item){
+			console.log("打开文件夹")
+			uni.navigateTo({
+			    url: '../../pages/file-box-detail/file-box-detail'
+			});
+			uni.$emit('clickBox', JSON.stringify(item))
 		},
 	}
 }

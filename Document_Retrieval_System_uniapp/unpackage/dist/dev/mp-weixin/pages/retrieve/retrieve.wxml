@@ -1,1 +1,1 @@
-<view>检索文档</view>
+<view><view><uni-search-bar vue-id="665527c0-1" radius="{{100}}" data-event-opts="{{[['^confirm',[['search']]],['^input',[['input']]]]}}" bind:confirm="__e" bind:input="__e" bind:__l="__l"></uni-search-bar></view><file-data-word vue-id="665527c0-2" localdata="{{data}}" bind:__l="__l"></file-data-word></view>

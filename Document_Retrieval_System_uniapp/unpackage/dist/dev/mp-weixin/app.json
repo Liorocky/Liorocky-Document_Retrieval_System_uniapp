@@ -1,8 +1,7 @@
 {
   "pages": [
     "pages/retrieve/retrieve",
-    "pages/upload/upload",
-    "pages/show/show"
+    "pages/upload/upload"
   ],
   "subPackages": [],
   "window": {
@@ -10,6 +9,25 @@
     "navigationBarTitleText": "uni-app",
     "navigationBarBackgroundColor": "#F8F8F8",
     "backgroundColor": "#F8F8F8"
+  },
+  "tabBar": {
+    "selectedColor": "#1cbbb4",
+    "borderStyle": "black",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "text": "检索",
+        "pagePath": "pages/retrieve/retrieve",
+        "iconPath": "static/tabbar/retrieve.png",
+        "selectedIconPath": "static/tabbar/retrieve_cur.png"
+      },
+      {
+        "text": "录入",
+        "pagePath": "pages/upload/upload",
+        "iconPath": "static/tabbar/upload.png",
+        "selectedIconPath": "static/tabbar/upload_cur.png"
+      }
+    ]
   },
   "usingComponents": {}
 }

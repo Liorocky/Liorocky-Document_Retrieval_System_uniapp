@@ -16,6 +16,15 @@
                 "enablePullDownRefresh": false
             }
         }
+        ,{
+            "path" : "pages/file-box-detail/file-box-detail",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "详情",
+                "enablePullDownRefresh": false
+            }
+            
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

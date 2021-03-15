@@ -4,7 +4,7 @@
 			<uni-search-bar :radius="100" @confirm="search" @input="input" ></uni-search-bar>			
 		</view>
 
-	<file-data-word :localdata="data"></file-data-word>
+	<file-data-box :localdata="data"></file-data-box>
 	</view>
 </template>
 
@@ -14,9 +14,14 @@
 		data() {
 			return {
 				data: [
-				  {fileName: '文档1', filePath: 'www.baidu.com',fileType: 'word'},
-				  {fileName: '文档2', filePath: 'www.baidu.com',fileType: 'word'},
-				  {fileName: '文档3', filePath: 'www.baidu.com',fileType: 'word'}
+				  {fileName: '文档测试测试文档测试测试文1', filePath: 'www.baidu.com',fileType: 'word'},
+				  {fileName: '文档测试测试文档测试测试文2', filePath: 'www.baidu.com',fileType: 'word'},
+				  {fileName: '文档测试测试文档测试测试文3', filePath: 'www.baidu.com',fileType: 'word'},
+				  {fileName: '文档测试测试文档测试测试文3', filePath: 'www.baidu.com',fileType: 'word'},
+				  {fileName: '文档测试测试文档测试测试文3', filePath: 'www.baidu.com',fileType: 'word'},
+				  {fileName: '文档测试测试文档测试测试文3', filePath: 'www.baidu.com',fileType: 'word'},
+				  {fileName: '文档测试测试文档测试测试文3', filePath: 'www.baidu.com',fileType: 'word'},
+				  {fileName: '文档测试测试文档测试测试文3', filePath: 'www.baidu.com',fileType: 'word'}
 				],
 			}
 		},
