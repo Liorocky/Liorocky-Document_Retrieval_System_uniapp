@@ -17,7 +17,7 @@
             }
         }
         ,{
-            "path" : "pages/file-box-detail/file-box-detail",
+            "path" : "pages/page-box-detail/page-box-detail",
             "style" :                                                                                    
             {
                 "navigationBarTitleText": "详情",
