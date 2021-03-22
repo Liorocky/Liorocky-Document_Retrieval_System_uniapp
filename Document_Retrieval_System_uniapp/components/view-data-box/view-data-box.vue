@@ -31,10 +31,7 @@
 			clickBox: function(item) {
 				console.log("打开文件夹")
 				uni.navigateTo({
-					url: '../../pages/page-box-detail/page-box-detail',
-					success: function() {
-						uni.$emit('clickBox', item)
-					}
+					url: '../../pages/page-box-detail/page-box-detail?item=' + encodeURIComponent(JSON.stringify(item))
 				});
 			},
 		}

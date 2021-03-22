@@ -12,36 +12,37 @@
 </template>
 
 <script>
-export default {
-	name: "view-data-file",
-	//属性
-	props: {
-		localdata: {
-			type: Array,
-			default () {
-				return []
-			}
+	export default {
+		name: "view-data-file",
+		//属性
+		props: {
+			localdata: {
+				type: Array,
+				default () {
+					return []
+				}
+			},
 		},
-	},
-	//组件生命周期
-	created: function(e){
-	
-	},
-	methods: {
-		previewFile: function(obj){
-			console.log("预览文件")
+		//组件生命周期
+		created: function(e) {
+
 		},
+		methods: {
+			previewFile: function(obj) {
+				console.log("预览文件")
+			},
+		}
 	}
-}
 </script>
 
 <style>
-.file-item{
-	display: flex;
-	flex-flow: row nowrap;
-}
-.file-item-name{
-	font-size: medium;
-	margin: auto 0;
-}
+	.file-item {
+		display: flex;
+		flex-flow: row nowrap;
+	}
+
+	.file-item-name {
+		font-size: medium;
+		margin: auto 0;
+	}
 </style>
