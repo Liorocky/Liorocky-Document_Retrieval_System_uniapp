@@ -1,17 +1,32 @@
 <template>
 	<view>
+		<!-- 标题&描述 -->
 		<view class="">
-			<u-form :model="fileBoxData" ref="uForm">
+			<u-form :model="fileBoxForm" ref="fileBoxForm">
 				<u-form-item label="" prop="title" label-position="left" left-icon="info">
-					<u-input v-model="fileBoxData.title" disabled/>
+					<u-input v-model="fileBoxForm.title" disabled/>
 				</u-form-item>
 				<u-form-item label="" prop="desc" label-position="left" left-icon="file-text">
-					<u-input v-model="fileBoxData.desc" auto-height />
+					<u-input v-model="fileBoxForm.desc" auto-height />
 				</u-form-item>
 			</u-form>
 		</view>
 		
+		<!-- 标签 -->
+		<view>
+			
+		</view>
+		
+		<!-- 分割线 -->
+		<view>
+			<u-line color="primary" border-style="dashed"></u-line>
+		</view>
+		
+		<!-- 文件 -->
+		<view>
 		<!-- <file-data-box></file-data-box> -->
+			
+		</view>
 	</view>
 
 </template>
@@ -22,11 +37,11 @@
 			const item = JSON.parse(decodeURIComponent(option.item));
 			// uni.$once('clickBox', this.setFileBoxData)
 			console.log("item: ", item);
-			this.fileBoxData = item
+			this.fileBoxForm = item
 		},
 		data() {
 			return {
-				fileBoxData: {},
+				fileBoxForm: {},
 				isNotEditable: true // 是否不可编辑
 			}
 		},
@@ -45,6 +60,8 @@
 	}
 </script>
 
-<style>
-
+<style lang="scss">
+	// u-line {
+	// 	color: $u-type-primary;
+	// }
 </style>

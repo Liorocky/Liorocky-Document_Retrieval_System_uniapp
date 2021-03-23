@@ -38,7 +38,7 @@
 	}
 </script>
 
-<style>
+<style lang="scss">
 	.file-item {
 		display: flex;
 		flex-flow: row nowrap;

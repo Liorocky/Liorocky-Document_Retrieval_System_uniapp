@@ -1,10 +1,26 @@
 <template>
 	<view>
-		<view>
-			<uni-search-bar :radius="100" @confirm="search" @input="input"></uni-search-bar>
-		</view>
-
+		<u-row>
+			<u-col span="1">
+				<u-button @click="selectTagsShow = true" 
+					type="primary" size="mini" :hair-line="false" shape="square">标签</u-button>
+			</u-col>
+			<u-col span="10" offset="1">
+				<view>
+					<u-search placeholder="请输入搜索内容" v-model="keyword" shape="square" 
+						:clearabled="true" :show-action="true" action-text="搜索" 
+						:animation="true" input-align="center"></u-search>
+				</view>
+			</u-col>
+		</u-row>
+		
 		<view-data-box :localdata="data"></view-data-box>
+		
+		<view>
+			<u-popup v-model="selectTagsShow" mode="top" height="52%">
+				<view-data-tags></view-data-tags>
+			</u-popup>
+		</view>
 	</view>
 </template>
 
@@ -12,6 +28,8 @@
 	export default {
 		data() {
 			return {
+				keyword: "",
+				selectTagsShow: false,
 				data: [{
 						"id": 103,
 						"active": 1,
@@ -93,7 +111,7 @@
 	}
 </script>
 
-<style>
+<style lang="scss">
 	.tags {
 		display: flex;
 		justify-content: space-between;
