@@ -1,7 +1,8 @@
 {
   "pages": [
     "pages/retrieve/retrieve",
-    "pages/upload/upload"
+    "pages/upload/upload",
+    "pages/page-box-detail/page-box-detail"
   ],
   "subPackages": [],
   "window": {

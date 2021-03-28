@@ -104,7 +104,7 @@
 				} else {
 					obj.width = this.value2px(width)
 				}
-
+				
 				let classles = ''
 				for(let i in obj){
 					classles+= `${i}:${obj[i]};`
@@ -178,12 +178,10 @@
 
 <style lang="scss">
 	.uni-file-picker__container {
-		/* #ifndef APP-NVUE */
 		display: flex;
-		box-sizing: border-box;
-		/* #endif */
 		flex-wrap: wrap;
 		margin: -5px;
+		box-sizing: border-box;
 	}
 
 	.file-picker__box {
@@ -192,9 +190,7 @@
 		width: 33.3%;
 		height: 0;
 		padding-top: 33.33%;
-		/* #ifndef APP-NVUE */
 		box-sizing: border-box;
-		/* #endif */
 	}
 
 	.file-picker__box-content {
@@ -223,9 +219,7 @@
 	}
 
 	.file-picker__mask {
-		/* #ifndef APP-NVUE */
 		display: flex;
-		/* #endif */
 		justify-content: center;
 		align-items: center;
 		position: absolute;
@@ -244,9 +238,7 @@
 	}
 
 	.is-add {
-		/* #ifndef APP-NVUE */
 		display: flex;
-		/* #endif */
 		align-items: center;
 		justify-content: center;
 	}
@@ -264,9 +256,7 @@
 	}
 
 	.icon-del-box {
-		/* #ifndef APP-NVUE */
 		display: flex;
-		/* #endif */
 		align-items: center;
 		justify-content: center;
 		position: absolute;

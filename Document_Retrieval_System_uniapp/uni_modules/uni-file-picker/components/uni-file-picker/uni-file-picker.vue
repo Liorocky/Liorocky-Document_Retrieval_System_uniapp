@@ -608,9 +608,7 @@
 	.uni-file-picker__header {
 		padding-top: 5px;
 		padding-bottom: 10px;
-		/* #ifndef APP-NVUE */
 		display: flex;
-		/* #endif */
 		justify-content: space-between;
 	}
 
@@ -625,9 +623,7 @@
 	}
 
 	.is-add {
-		/* #ifndef APP-NVUE */
 		display: flex;
-		/* #endif */
 		align-items: center;
 		justify-content: center;
 	}

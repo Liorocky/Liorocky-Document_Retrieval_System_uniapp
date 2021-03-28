@@ -1,1 +1,0 @@
-<view><block wx:for="{{localdata}}" wx:for-item="item" wx:for-index="__i0__"><view><view><image style="width:96px;height:96px;" src="/static/icon/Word.png"></image></view><view>{{item.fileName}}</view></view></block></view>

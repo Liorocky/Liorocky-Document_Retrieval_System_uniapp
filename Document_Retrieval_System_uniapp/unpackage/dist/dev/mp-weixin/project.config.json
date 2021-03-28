@@ -8,8 +8,8 @@
   },
   "compileType": "miniprogram",
   "libVersion": "",
-  "appid": "touristappid",
-  "projectname": "Document_Retrieval_System_uniapp",
+  "appid": "wx74b44a83c93c697b",
+  "projectname": "标签化文档检索系统",
   "condition": {
     "search": {
       "current": -1,
