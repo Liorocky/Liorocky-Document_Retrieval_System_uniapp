@@ -8,7 +8,7 @@
 		</view>
 		
 		<view>
-			<button type="primary" @click="selectTagsShow = true">选择标签</button>
+			<button type="primary" @click="tagsViewShow = true">选择标签</button>
 			
 		</view>
 		
@@ -21,8 +21,8 @@
 		</view>
 		
 		<view>
-			<u-popup v-model="selectTagsShow" mode="top" height="52%">
-				<view-data-tags></view-data-tags>
+			<u-popup v-model="tagsViewShow" mode="top" height="390rpx">
+				<view-data-tags :selectedTagsProp="uploadSelectedTags" :allTags="allTags"></view-data-tags>
 			</u-popup>
 		</view>
 	</view>
@@ -59,8 +59,103 @@
 						radius: 2
 					}
 				},
-				selectTagsShow: false, // pop选择标签
+				tagsViewShow: false, // 是否显示标签pop
+				allTags: [],
+				uploadSelectedTags: getApp().globalData.uploadSelectedTags,
 			}
+		},
+		created() {
+			this.allTags = [{
+					id: 1,
+					name: "正常的标",
+					selected: false
+				},
+				{
+					id: 2,
+					name: "正常的标",
+					selected: false
+				},
+				{
+					id: 3,
+					name: "正常的标",
+					selected: false
+				},
+				{
+					id: 4,
+					name: "正常的标",
+					selected: false
+				},
+				{
+					id: 5,
+					name: "正常的标",
+					selected: false
+				},
+				{
+					id: 6,
+					name: "正常的标",
+					selected: false
+				},
+				{
+					id: 7,
+					name: "正常的标",
+					selected: false
+				},
+				{
+					id: 8,
+					name: "正常的标",
+					selected: false
+				},
+				{
+					id: 9,
+					name: "正常的标",
+					selected: false
+				},
+				{
+					id: 10,
+					name: "正常的标",
+					selected: false
+				},
+				{
+					id: 11,
+					name: "正常的标",
+					selected: false
+				},
+				{
+					id: 12,
+					name: "正常的标",
+					selected: false
+				},
+				{
+					id: 13,
+					name: "正常的标",
+					selected: false
+				},
+				{
+					id: 14,
+					name: "正常的标",
+					selected: false
+				},
+				{
+					id: 15,
+					name: "正常的标",
+					selected: false
+				},
+				{
+					id: 16,
+					name: "正常的标",
+					selected: false
+				},
+				{
+					id: 17,
+					name: "正常的标",
+					selected: false
+				},
+				{
+					id: 18,
+					name: "正常的标",
+					selected: false
+				}
+			]
 		},
 		methods: {
 			// 获取上传状态
