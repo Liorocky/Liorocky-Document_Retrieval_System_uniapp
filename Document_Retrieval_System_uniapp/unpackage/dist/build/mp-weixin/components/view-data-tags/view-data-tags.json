@@ -1,7 +1,0 @@
-{
-  "usingComponents": {
-    "u-grid": "/uview-ui/components/u-grid/u-grid",
-    "u-grid-item": "/uview-ui/components/u-grid-item/u-grid-item"
-  },
-  "component": true
-}
