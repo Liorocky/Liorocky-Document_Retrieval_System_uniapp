@@ -1,9 +1,6 @@
 <script>  
     export default {  
         globalData: {  
-            searchSelectedTags: null,
-			uploadSelectedTags: null,
-			allTags: []
         },  
         onLaunch: function() {  
             console.log('App Launch')  

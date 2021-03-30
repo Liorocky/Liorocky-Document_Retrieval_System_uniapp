@@ -14,7 +14,7 @@
 			</swiper>
 
 			<view class="indicator-dots" v-if="true">
-				<view v-if="selectedTags && selectedTags.size > 0">已选择{{ selectedTags.size }}个标签</view>
+				<view v-if="selectedTagsSet && selectedTagsSet.size > 0">已选择{{ selectedTagsSet.size }}个标签</view>
 				<view v-for="i in pagesNum">
 					<view class="indicator-dots-item" :class="[current == i - 1 ? 'indicator-dots-active' : '']"></view>
 				</view>
@@ -35,7 +35,7 @@
 				}
 			},
 			selectedTags: { // 已选择的标签
-				type: Set,
+				type: Array,
 				default () {
 					return
 				}
@@ -43,30 +43,30 @@
 		},
 		data() {
 			return {
-				current: 0,
-				// selectedTags: this.selectedTagsProp
+				current: 0
 			};
 		},
 		computed: {
 			pagesNum: function() {
 				return Math.ceil(this.allTags.length / 15)
+			},
+			selectedTagsSet: function() {
+				if (this.selectedTags === null) {
+					return null
+				}
+				return new Set(this.selectedTags)
 			}
 		},
 		methods: {
 			clickTag(item) {
-				console.log("item: ", item);
-				this.$emit("clickTag", item)
-				// item.selected = item.selected === true ? false : true
-				// if (this.selectedTags === null) {
-				// 	this.selectedTags = new Set
-				// }
-				
-				// if (this.selectedTags.has(item)) {
-				// 	this.selectedTags.delete(item)
-				// } else {
-				// 	this.selectedTags.add(item)
-				// }
-				// console.log("this.selectedTags", this.selectedTags)
+				if (this.selectedTagsSet.has(item)) {
+					this.selectedTagsSet.delete(item)
+				} else {
+					this.selectedTagsSet.add(item)
+				}
+				item.selected = item.selected === true ? false : true 
+				this.$emit("clickTag", item) // 点击的标签
+				this.$emit("selectedTags", Array.from(this.selectedTagsSet)) // 所有已选中的标签
 			},
 			change(e) {
 				this.current = e.detail.current;

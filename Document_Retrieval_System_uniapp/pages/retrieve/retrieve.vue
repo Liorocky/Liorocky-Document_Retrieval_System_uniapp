@@ -25,7 +25,7 @@
 
 		<view>
 			<u-popup v-model="tagsViewShow" mode="top" height="390rpx">
-				<view-data-tags :selectedTags="searchSelectedTags" :allTags="allTags" @clickTag="clickTags"></view-data-tags>
+				<view-data-tags :selectedTags="searchSelectedTags" :allTags="allTags" @clickTag="clickTags" @selectedTags="selectedTags"></view-data-tags>
 			</u-popup>
 		</view>
 	</view>
@@ -35,11 +35,11 @@
 	export default {
 		data() {
 			return {
-				keyword: "",
-				tagsViewShow: false,
-				allTags: [],
-				searchSelectedTags: getApp().globalData.searchSelectedTags,
-				boxData: []
+				keyword: "", // 查询关键词
+				tagsViewShow: false, // 选择标签的页面
+				allTags: [], // 所有标签
+				searchSelectedTags: [], // 搜索的标签
+				boxData: [] // 文件夹列表数据
 			}
 		},
 		methods: {
@@ -48,6 +48,10 @@
 			// }
 			clickTags(item) {
 				console.log("emit", item)
+			},
+			selectedTags(data) {
+				this.searchSelectedTags = data
+				console.log("tags", data)
 			}
 		},
 		onLoad() {
@@ -59,7 +63,7 @@
 
 		},
 		created() {
-			getApp().globalData.allTags = [{
+			this.allTags = [{
 					id: 1,
 					name: "正常的标",
 					selected: false
@@ -150,9 +154,6 @@
 					selected: false
 				}
 			]
-			this.allTags = getApp().globalData.allTags
-			
-			console.log("getApp().globalData.allTags", getApp().globalData.allTags)
 			
 			this.boxData = [{
 					"id": 103,

@@ -22,7 +22,7 @@
 		
 		<view>
 			<u-popup v-model="tagsViewShow" mode="top" height="390rpx">
-				<view-data-tags :selectedTagsProp="uploadSelectedTags" :allTags="allTags"></view-data-tags>
+				<view-data-tags :selectedTags="uploadSelectedTags" :allTags="allTags" @clickTag="clickTags" @selectedTags="selectedTags"></view-data-tags>
 			</u-popup>
 		</view>
 	</view>
@@ -61,7 +61,7 @@
 				},
 				tagsViewShow: false, // 是否显示标签pop
 				allTags: [],
-				uploadSelectedTags: getApp().globalData.uploadSelectedTags,
+				uploadSelectedTags: []
 			}
 		},
 		created() {
@@ -179,6 +179,13 @@
 			},
 			upload() {
 				this.$refs.files.upload()
+			},
+			clickTags(item) {
+				console.log("emit", item)
+			},
+			selectedTags(data) {
+				this.uploadSelectedTags = data
+				console.log("tags", data)
 			}
 		}
 	}
