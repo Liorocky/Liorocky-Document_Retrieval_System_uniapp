@@ -52,12 +52,22 @@
 			selectedTags(data) {
 				this.searchSelectedTags = data
 				console.log("tags", data)
+			},
+			testApi() {
+				this.$u.post('/oauth/2.0/token', {
+					grant_type: "client_credentials",
+					client_id: "z0UB1gOgTiGq3cr35iC87vK7",
+					client_secret: "vt1k9dNaoGe3MQDeOt5fElt4KlFpjGrk"
+				}).then(res => {
+					console.log("res", res)
+				})
 			}
 		},
 		onLoad() {
 			// uni.$on("clickTags", function(data) {
 			// 	console.log("click", data)
 			// })
+			this.testApi()
 		},
 		computed: {
 
