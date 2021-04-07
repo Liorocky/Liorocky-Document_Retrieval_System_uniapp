@@ -12,5 +12,5 @@ const app = new Vue({
     ...App
 })
 
-Vue.use(httpInterceptor, this)
+Vue.use(httpInterceptor, app)
 app.$mount()
