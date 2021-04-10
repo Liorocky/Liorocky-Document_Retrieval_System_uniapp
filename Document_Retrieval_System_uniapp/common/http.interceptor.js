@@ -1,7 +1,7 @@
 const install = (Vue, vm) => {
 	// 此为自定义配置参数，具体参数见上方说明
 	Vue.prototype.$u.http.setConfig({
-		baseUrl: 'https://aip.baidubce.com', // 请求的本域名
+		baseUrl: 'http://localhost:8888', // 请求的本域名
 		method: 'POST',
 		// 设置为json，返回后会对数据进行一次JSON.parse()
 		dataType: 'json',
@@ -33,12 +33,12 @@ const install = (Vue, vm) => {
 		// 所以哪怕您重新登录修改了Storage，下一次的请求将会是最新值
 		// const token = uni.getStorageSync('token');
 		// config.header.token = token;
-		config.header.Token = 'xxxxxx';
+		// config.header.Token = 'xxxxxx';
 		
 		// 可以对某个url进行特别处理，此url参数为this.$u.get(url)中的url值
-		if(config.url == '/user/login') config.header.noToken = true;
+		// if(config.url == '/user/login') config.header.noToken = true;
 		// 最后需要将config进行return
-		return config;
+		// return config;
 		// 如果return一个false值，则会取消本次请求
 		// if(config.url == '/user/rest') return false; // 取消某次请求
 	}
