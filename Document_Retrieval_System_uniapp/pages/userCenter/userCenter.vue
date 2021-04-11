@@ -37,11 +37,19 @@
 				<u-cell-item icon="heart" title="关注"></u-cell-item>
 			</u-cell-group>
 		</view>
-		
 		<view class="u-m-t-20">
+			<u-cell-group>
+				<u-cell-item icon="setting" title="登出" @click="logout()"></u-cell-item>
+			</u-cell-group>
+		</view>
+<!-- 		<view class="u-m-t-20">
 			<u-cell-group>
 				<u-cell-item icon="setting" title="设置" @click="click()"></u-cell-item>
 			</u-cell-group>
+		</view> -->
+		
+		<view>
+			<u-toast ref="uToast" />
 		</view>
 	</view>
 </template>
@@ -54,16 +62,63 @@
 				show:true
 			}
 		},
+		onShow() {
+			this.checkLogin()
+		},
 		onLoad() {
 			
 		},
 		methods: {
-			click: function(item) {
+			checkLogin() {
+				// 登录拦截
+				const uni_id_token = uni.getStorageSync("uni_id_token")
+				const uni_id_token_expired = uni.getStorageSync("uni_id_token_expired")
+				console.log("uni_id_token", uni_id_token);
+				console.log("uni_id_token_expired", uni_id_token_expired);
+				
+				if (!uni_id_token && new Date() > uni_id_token_expired) {
+					uni.showToast({
+					    title: '请登录',
+					    duration: 2000
+					});
+					this.$u.route({
+						url: 'pages/login/login',
+					})
+				}
+			},
+			click(item) {
 				console.log("打开登陆页面")
 				uni.navigateTo({
 					url: '../../pages/login/login'
 				});
 			},
+			logout() {
+				let that = this
+				uniCloud.callFunction({
+					name: 'uni-id-center',
+					data: {
+						action: 'logout'
+					},
+					success(res) {
+						uni.removeStorageSync('uni_id_token')
+						uni.removeStorageSync('uni_id_token_expired')
+						that.$refs.uToast.show({
+							title: "登出成功",
+							type: 'success',
+							url: '/pages/login/login',
+							duration: 2000,
+							type: "primary"
+						})
+					},
+					fail(e) {
+						console.error(e)
+						uni.showModal({
+							showCancel: false,
+							content: '登出失败，请稍后再试'
+						})
+					}
+				})
+			}
 		}
 	}
 </script>

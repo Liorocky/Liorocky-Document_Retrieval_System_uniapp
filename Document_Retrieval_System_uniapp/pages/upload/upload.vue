@@ -64,6 +64,9 @@
 				uploadSelectedTags: []
 			}
 		},
+		onShow() {
+			this.checkLogin()
+		},
 		created() {
 			this.allTags = [{
 					id: 1,
@@ -158,6 +161,23 @@
 			]
 		},
 		methods: {
+			checkLogin() {
+				// 登录拦截
+				const uni_id_token = uni.getStorageSync("uni_id_token")
+				const uni_id_token_expired = uni.getStorageSync("uni_id_token_expired")
+				console.log("uni_id_token", uni_id_token);
+				console.log("uni_id_token_expired", uni_id_token_expired);
+				
+				if (!uni_id_token && new Date() > uni_id_token_expired) {
+					uni.showToast({
+					    title: '请登录',
+					    duration: 2000
+					});
+					this.$u.route({
+						url: 'pages/login/login',
+					})
+				}
+			},
 			// 获取上传状态
 			select(e) {
 				console.log('选择文件：', e)
