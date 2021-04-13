@@ -1,7 +1,7 @@
 <template>
 	<view class="left-window-style">
 		<view class="second-menu">
-			<component v-bind:is="active"></component>
+			<!-- <component v-bind:is="active"></component> -->
 		</view>
 	</view>
 </template>

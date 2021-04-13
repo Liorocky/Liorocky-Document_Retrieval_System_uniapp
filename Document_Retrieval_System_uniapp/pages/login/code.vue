@@ -43,7 +43,8 @@
 				this.show = false
 				this.value = ''
 				this.sendSmsStatus = false
-				this.setVerifyCode("login") // 设置验证码
+				this.sendSmsCode("login") // 发送验证码
+				// this.setVerifyCode("login") // 设置验证码
 			},
 			// change事件侦听
 			change(value) {
@@ -65,6 +66,7 @@
 			// 发送短信验证码
 			async sendSmsCode(type) {
 				this.getCode()
+				let that = this
 				console.log("this.code: ", this.code);
 				uniCloud.callFunction({
 					name: 'uni-id-center',
@@ -77,8 +79,16 @@
 						}
 					},
 					success(res) {
-						console.log("验证码发送成功: ", res);
-						this.sendSmsStatus = true
+						if (res.result.code !== 0) {
+							uni.showModal({
+								showCancel: false,
+								content: '发送失败，请稍后再试'
+							})
+						} else {
+							console.log("验证码发送成功: ", res);
+							that.sendSmsStatus = true
+							that.startInterval() // 开启验证码倒计时
+						}
 						return res
 					},
 					fail(e) {
