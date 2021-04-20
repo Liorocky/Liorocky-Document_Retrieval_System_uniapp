@@ -43,8 +43,8 @@
 				this.show = false
 				this.value = ''
 				this.sendSmsStatus = false
-				this.sendSmsCode("login") // 发送验证码
-				// this.setVerifyCode("login") // 设置验证码
+				// this.sendSmsCode("login") // 发送验证码
+				this.setVerifyCode("login") // 设置验证码
 			},
 			// change事件侦听
 			change(value) {
@@ -120,7 +120,7 @@
 						if (res.result.code === 0) {
 							uni.setStorageSync('uni_id_token',res.result.token)
 							uni.setStorageSync('uni_id_token_expired', res.result.tokenExpired)
-							uni.setStorageSync('uid', res.result.uid)
+							uni.setStorageSync('uni_id_uid', res.result.uid)
 							
 							that.$refs.uToast.show({
 								title: res.result.msg,

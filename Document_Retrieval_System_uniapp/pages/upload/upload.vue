@@ -33,8 +33,12 @@
 		data() {
 			return {
 				form: {
-					title:"",
-					desc:""
+					title: "",
+					desc: "",
+					uid: "",
+					count: 0,
+					tags: [],
+					files: []
 				},
 				listValue: [],
 				imageStyles: {
@@ -61,123 +65,25 @@
 				},
 				tagsViewShow: false, // 是否显示标签pop
 				allTags: [],
-				uploadSelectedTags: []
+				uploadSelectedTags: [],
+				uid: ""
 			}
 		},
 		onShow() {
-			this.checkLogin()
+			const uni_id_token = uni.getStorageSync("uni_id_token")
+			const uni_id_uid = uni.getStorageSync("uni_id_uid")
+			this.uid = uni_id_uid
+			console.log("uni_id_uid: ", this.uid);
 		},
 		created() {
 			this.allTags = [{
 					id: 1,
 					name: "正常的标",
 					selected: false
-				},
-				{
-					id: 2,
-					name: "正常的标",
-					selected: false
-				},
-				{
-					id: 3,
-					name: "正常的标",
-					selected: false
-				},
-				{
-					id: 4,
-					name: "正常的标",
-					selected: false
-				},
-				{
-					id: 5,
-					name: "正常的标",
-					selected: false
-				},
-				{
-					id: 6,
-					name: "正常的标",
-					selected: false
-				},
-				{
-					id: 7,
-					name: "正常的标",
-					selected: false
-				},
-				{
-					id: 8,
-					name: "正常的标",
-					selected: false
-				},
-				{
-					id: 9,
-					name: "正常的标",
-					selected: false
-				},
-				{
-					id: 10,
-					name: "正常的标",
-					selected: false
-				},
-				{
-					id: 11,
-					name: "正常的标",
-					selected: false
-				},
-				{
-					id: 12,
-					name: "正常的标",
-					selected: false
-				},
-				{
-					id: 13,
-					name: "正常的标",
-					selected: false
-				},
-				{
-					id: 14,
-					name: "正常的标",
-					selected: false
-				},
-				{
-					id: 15,
-					name: "正常的标",
-					selected: false
-				},
-				{
-					id: 16,
-					name: "正常的标",
-					selected: false
-				},
-				{
-					id: 17,
-					name: "正常的标",
-					selected: false
-				},
-				{
-					id: 18,
-					name: "正常的标",
-					selected: false
 				}
 			]
 		},
 		methods: {
-			checkLogin() {
-				// 登录拦截
-				const uni_id_token = uni.getStorageSync("uni_id_token")
-				const uni_id_token_expired = uni.getStorageSync("uni_id_token_expired")
-				console.log("uni_id_token", uni_id_token);
-				console.log("uni_id_token_expired", uni_id_token_expired);
-				
-				if (!uni_id_token && new Date() > uni_id_token_expired) {
-					uni.showToast({
-					    title: '请登录',
-					    duration: 2000
-					});
-					this.$u.route({
-						url: 'pages/login/login',
-					})
-				}
-			},
 			// 获取上传状态
 			select(e) {
 				console.log('选择文件：', e)
@@ -190,9 +96,22 @@
 			// 上传成功
 			success(e) {
 				console.log('上传成功')
-				console.log("e: ",e);
-			},
+				console.log("e: ", e);
+				const that = this
+				e.tempFiles.forEach(function (item, index) {
+					let file = {
+						uid: that.uid,
+						fileName: item.name,
+						numberOrder: index + 1,
+						size: item.size,
+						path: item.url,
+						type: item.extname
+					}
+					that.form.files.push(file)
+				})
 
+				this.$u.api.addFileBox(this.form, this.uid)
+			},
 			// 上传失败
 			fail(e) {
 				console.log('上传失败：', e)

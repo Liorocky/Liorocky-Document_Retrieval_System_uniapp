@@ -18,6 +18,19 @@ const install = (Vue, vm) => {
 	
 	// 请求拦截部分，如配置，每次请求前都会执行
 	Vue.prototype.$u.http.interceptor.request = (config) => {
+		// 登录拦截
+		const uni_id_token = uni.getStorageSync("uni_id_token")
+		const uni_id_token_expired = uni.getStorageSync("uni_id_token_expired")
+		console.log("uni_id_token", uni_id_token);
+		console.log("uni_id_token_expired", uni_id_token_expired);
+		
+		if (!uni_id_token && new Date() > uni_id_token_expired) {
+			// todo 提示语
+			uni.redirectTo({
+			    url: '../login/login'
+ 			});
+			return false
+		}
 		// 引用token
 		// 方式一，存放在vuex的token，假设使用了uView封装的vuex方式
 		// 见：https://uviewui.com/components/globalVariable.html
