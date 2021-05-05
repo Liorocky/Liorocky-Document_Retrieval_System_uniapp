@@ -13,12 +13,12 @@ const install = (Vue, vm) => {
 	// 此处使用了传入的params参数，一切自定义即可
 	
 	// 获取所有文档集
-	let getFileBox = (params = {}) => vm.$u.get(fileBoxUrl, params);
+	// let getFileBox = (params = {}) => vm.$u.get(fileBoxUrl, params);
 	// 新增文档集
 	let addFileBox = (params = {}) => vm.$u.post(fileBoxUrl, params);
 	
 	// 将各个定义的接口名称，统一放进对象挂载到vm.$u.api(因为vm就是this，也即this.$u.api)下
-	vm.$u.api = {getBaiduAPI, getFileBox, addFileBox};
+	vm.$u.api = {getBaiduAPI, addFileBox};
 }
 
 export default {

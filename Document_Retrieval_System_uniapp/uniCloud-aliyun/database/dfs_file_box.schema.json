@@ -1,0 +1,36 @@
+{
+	"bsonType": "object",
+	"required": [],
+	"permission": {
+		"read": true,
+		"create": true,
+		"update": true,
+		"delete": true
+	},
+	"properties": {
+		"_id": {
+			"description": "ID，系统自动生成"
+		},
+		"box_uid": {
+			"description": "UID，所属用户ID"
+		},
+		"box_title": {
+			"description": "标题"
+		},
+		"box_desc": {
+			"description": "文档集描述"
+		},
+		"box_count": {
+			"description": "文件总数"
+		},
+		"box_isDelete": {
+			"description": "是否删除"
+		},
+		"box_add_time": {
+			"description": "添加时间"
+		},
+		"box_update_time": {
+			"description": "更新时间"
+		}
+	}
+}
