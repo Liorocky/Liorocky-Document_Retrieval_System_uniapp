@@ -15,13 +15,8 @@
 			</u-row>
 		</view>
 
-		<unicloud-db v-slot:default="{data, loading, error, options}" collection="dfs_file_box" :where="`box_uid=='${uid}'`">
-			<view v-if="error">{{error.message}}</view>
-			<view v-else>
-				<view-data-box :fileBoxData="data"></view-data-box>
-			</view>
-		</unicloud-db>
-		
+		<view-data-box :fileBoxData="fileBoxData"></view-data-box>
+
 		<view>
 			<u-popup v-model="tagsViewShow" mode="top" height="390rpx">
 				<view-data-tags :selectedTags="searchSelectedTags" :allTags="allTags" @clickTag="clickTags" @selectedTags="selectedTags"></view-data-tags>
@@ -31,6 +26,7 @@
 </template>
 
 <script>
+	// import utils from '@/common/utils'
 	export default {
 		data() {
 			return {
@@ -38,7 +34,7 @@
 				tagsViewShow: false, // 选择标签的页面
 				allTags: [], // 所有标签
 				searchSelectedTags: [], // 搜索的标签
-				boxData: [] , // 文件夹列表数据
+				fileBoxData: [] , // 文件夹列表数据
 				uid: "" // uniId
 			}
 		},
@@ -47,135 +43,59 @@
 			const uni_id_uid = uni.getStorageSync("uni_id_uid")
 			this.uid = uni_id_uid
 			console.log("uni_id_uid: ", this.uid);
-			this.getAllFileBox()
 		},
 		methods: {
-			// addTag(item) {
-			// 	this.selectedTags.add(item)
-			// }
+			// 点击标签
 			clickTags(item) {
 				console.log("emit", item)
 			},
+			// 接收tags组件返回的标签数据
 			selectedTags(data) {
 				this.searchSelectedTags = data
 				console.log("tags", data)
 			},
-			getAllFileBox() {
-				// uni.request({
-				//     url: 'http://localhost:8888/fileBox/' + this.uid,
-				//     success: (res) => {
-				//         console.log(res.data);
-				// 		this.boxData = res.data.data
-				//     }
-				// });
-				// this.$u.api.getFileBox(uni.getStorageSync("uni_id_uid")).then(res => {
-				// 	console.log(res);
-				// })
+			// 根据标题和标签获取文档集
+			getFileBox(title, tags) {
+				// 获取数据库
+				const db = uniCloud.database()
+				
+				// 仅使用标签查询
+				if (title === '') {
+					title = '.'
+				}
+				
+				// 获取集合
+				const collection = db.collection('dfs_file_box')
+				.where('box_uid == $cloudEnv_uid && ' + '/' + title + '/.test(box_title)')
+				// .where('box_uid == $cloudEnv_uid && ' + '/./.test(box_title)')
+				.get()
+				.then(res => {
+					const that = this
+					console.log("res", res)
+					res.result.data.forEach(item => {
+						if (tags.size === 0) {
+							// 仅使用标题查询
+							this.fileBoxData = res.result.data
+						} else if (that.$utils.isArr1ContainArr2(item.box_tags, tags)) {
+							// 进行包含匹配
+							that.fileBoxData.push(item)
+						}
+						console.log('this.fileBoxData', this.fileBoxData) 
+					})
+				}).catch(err => {
+					console.log("err", err)
+				})
 			}
 		},
 		onLoad() {
-			// uni.$on("clickTags", function(data) {
-			// 	console.log("click", data)
-			// })
-			console.log("onLoad");
-			
+			// 获取文档集
+			this.getFileBox('西', ['609a4b66f2e56f0001665368'])
 		},
 		computed: {
 
 		},
 		created() {
-			this.allTags = [{
-					id: 1,
-					name: "正常的标",
-					selected: false
-				},
-				{
-					id: 2,
-					name: "正常的标",
-					selected: false
-				},
-				{
-					id: 3,
-					name: "正常的标",
-					selected: false
-				},
-				{
-					id: 4,
-					name: "正常的标",
-					selected: false
-				},
-				{
-					id: 5,
-					name: "正常的标",
-					selected: false
-				},
-				{
-					id: 6,
-					name: "正常的标",
-					selected: false
-				},
-				{
-					id: 7,
-					name: "正常的标",
-					selected: false
-				},
-				{
-					id: 8,
-					name: "正常的标",
-					selected: false
-				},
-				{
-					id: 9,
-					name: "正常的标",
-					selected: false
-				},
-				{
-					id: 10,
-					name: "正常的标",
-					selected: false
-				},
-				{
-					id: 11,
-					name: "正常的标",
-					selected: false
-				},
-				{
-					id: 12,
-					name: "正常的标",
-					selected: false
-				},
-				{
-					id: 13,
-					name: "正常的标",
-					selected: false
-				},
-				{
-					id: 14,
-					name: "正常的标",
-					selected: false
-				},
-				{
-					id: 15,
-					name: "正常的标",
-					selected: false
-				},
-				{
-					id: 16,
-					name: "正常的标",
-					selected: false
-				},
-				{
-					id: 17,
-					name: "正常的标",
-					selected: false
-				},
-				{
-					id: 18,
-					name: "正常的标",
-					selected: false
-				}
-			]
-			
+	
 		}	
 	}
 </script>

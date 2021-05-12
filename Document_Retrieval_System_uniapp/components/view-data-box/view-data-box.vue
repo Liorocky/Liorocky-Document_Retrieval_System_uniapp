@@ -12,20 +12,12 @@
 						<view class="file-item-title">{{item.box_title}}</view>
 						
 						<view class="file-item-tag">
-							<unicloud-db v-slot:default="{data, loading, error, options}" collection="dfs_tag" :where="`tag_uid=='${item.box_uid}'`">
-								<view v-if="error">{{error.message}}</view>
-								<view v-else>
-									<u-tag text="data.tag_name" size="mini" mode="dark" :closeable="false"/>
-									
-								</view>
-							</unicloud-db>
+							<u-tag text="财务" size="mini" mode="dark" :closeable="false"/>
+							<u-tag text="财务" size="mini" mode="dark" :closeable="false"/>
+							<u-tag text="财务" size="mini" mode="dark" :closeable="false"/>
+							<u-tag text="财务" size="mini" mode="dark" :closeable="false"/>
 						</view>
-						
-<!-- 							<u-tag text="财务" size="mini" mode="dark" :closeable="false"/>
-							<u-tag text="财务" size="mini" mode="dark" :closeable="false"/>
-							<u-tag text="财务" size="mini" mode="dark" :closeable="false"/>
-							<u-tag text="财务" size="mini" mode="dark" :closeable="false"/> -->
-						
+
 					</view>
 				</u-col>
 			</view>

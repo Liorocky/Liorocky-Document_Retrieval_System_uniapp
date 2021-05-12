@@ -23,6 +23,9 @@
 		"box_count": {
 			"description": "文件总数"
 		},
+		"box_tags": {
+			"description": "拥有标签"
+		},
 		"box_isDelete": {
 			"description": "是否删除"
 		},
