@@ -1,7 +1,7 @@
 const install = (Vue, vm) => {
 	// 此为自定义配置参数，具体参数见上方说明
 	Vue.prototype.$u.http.setConfig({
-		baseUrl: 'http://localhost:8888/fileBox', // 请求的本域名
+		baseUrl: 'https://aip.baidubce.com/rpc/2.0', // 请求的本域名
 		method: 'POST',
 		// 设置为json，返回后会对数据进行一次JSON.parse()
 		dataType: 'json',
@@ -31,6 +31,12 @@ const install = (Vue, vm) => {
  			});
 			return false
 		}
+		
+		// 百度api鉴权
+		console.log("testBaidu")
+		
+		console.log("config url", config)
+		
 		// 引用token
 		// 方式一，存放在vuex的token，假设使用了uView封装的vuex方式
 		// 见：https://uviewui.com/components/globalVariable.html
