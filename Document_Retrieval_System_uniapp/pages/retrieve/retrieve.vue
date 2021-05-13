@@ -89,7 +89,7 @@
 		},
 		onLoad() {
 			// 获取文档集
-			this.getFileBox('西', ['609a4b66f2e56f0001665368'])
+			this.getFileBox('', [])
 		},
 		computed: {
 

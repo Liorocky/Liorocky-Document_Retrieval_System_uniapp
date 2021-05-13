@@ -1,8 +1,8 @@
 <template>
 	<view>
 		<view>
-			<u-form-item label="标题"><u-input v-model="uploadData.title" /></u-form-item>
-			<u-form-item label="描述"><u-input v-model="uploadData.desc" /></u-form-item>
+			<u-form-item label="标题"><u-input v-model="uploadFileBox.box_title" /></u-form-item>
+			<u-form-item label="描述"><u-input v-model="uploadFileBox.box_desc" /></u-form-item>
 		</view>
 		
 		<view>
@@ -30,13 +30,25 @@
 	export default {
 		data() {
 			return {
-				uploadData: {
-					title: "",
-					desc: "",
-					uid: "",
-					count: 0,
-					tags: [],
-					files: []
+				uploadFileBox: {
+					box_uid: "",
+					box_title: "",
+					box_desc: "",
+					box_count: 0,
+					box_tags: [],
+					box_is_deleted: 0,
+					box_add_time: null,
+					box_update_time: null,					
+				},
+				uploadFile: {
+					file_box_id: '',
+					file_uid: '',
+					file_name: '',
+					file_path: '',
+					file_type: '',
+					file_size: '',
+					file_add_time: null,
+					file_update_time: null,
 				},
 				fileListValue: [], // 文件列表
 				imageStyles: {
@@ -105,8 +117,8 @@
 				})
 				
 				// 生成标题、描述
-				this.uploadData.title = this.selectedFiles.tempFiles[0].name
-				this.uploadData.desc = this.selectedFiles.tempFiles[0].name
+				this.uploadFileBox.box_title = this.selectedFiles.tempFiles[0].name
+				this.uploadFileBox.box_desc = this.selectedFiles.tempFiles[0].name
 				
 				// 生成智能标签
 			},
@@ -121,15 +133,38 @@
 				console.log('上传成功')
 				console.log("e: ", e);
 				const that = this
-				e.tempFiles.forEach(function (item, index) {
-					let file = {
-						uid: that.uid,
-						fileName: item.name,
-						numberOrder: index + 1,
-						size: item.size,
-						path: item.url,
-						type: item.extname
+				
+				// 将文档集信息写入数据库中
+				console.log("this.uploadFileBox", this.uploadFileBox)
+				this.uploadFileBox.box_count = e.tempFiles.length
+				this.uploadFileBox.box_uid = this.uid
+				this.uploadFileBox.box_add_time = new Date()
+				this.uploadFileBox.box_update_time = new Date()
+				
+				// 获取数据库
+				const db = uniCloud.database()
+				
+				// 获取集合
+				const collection = db.collection('dfs_file_box')
+				let fileBoxId = collection.add(this.uploadFileBox)
+				
+				// 将文件信息写入数据库中
+				e.tempFiles.forEach( item => {
+					let uploadFile = {
+						file_box_id: fileBoxId,
+						file_uid: this.uid,
+						file_name: item.name,
+						file_path: item.url,
+						file_type: item.extname,
+						file_size: item.size,
+						file_add_time: new Date(),
+						file_update_time: new Date()
 					}
+					
+					// 上传uploadFile
+					// 获取集合
+					const collection = db.collection('dfs_file')
+					collection.add(uploadFile)
 				})
 
 			},

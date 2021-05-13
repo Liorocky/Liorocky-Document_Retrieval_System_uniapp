@@ -10,6 +10,30 @@
 	"properties": {
 		"_id": {
 			"description": "ID，系统自动生成"
+		},
+		"file_box_id": {
+			"description": "文档集ID"
+		},
+		"file_uid": {
+			"description": "用户ID"
+		},
+		"file_name": {
+			"description": "文件名"
+		},
+		"file_path": {
+			"description": "文件路径"
+		},
+		"file_type": {
+			"description": "文件类型"
+		},
+		"file_size": {
+			"description": "文件大小"
+		},
+		"file_add_time": {
+			"description": "文件添加时间"
+		},
+		"file_update_time": {
+			"description": "文件更新时间"
 		}
 	}
 }

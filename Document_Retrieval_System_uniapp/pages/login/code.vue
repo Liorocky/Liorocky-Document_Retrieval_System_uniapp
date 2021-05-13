@@ -102,7 +102,7 @@
 			},
 			// 通过短信验证码登录
 			async loginBySms() {
-				console.log("this.code1: ",this.code);
+				console.log("this.code1: ", this.code);
 				let that = this
 				uniCloud.callFunction({
 					name: 'uni-id-center',
@@ -118,7 +118,7 @@
 					success(res) {
 						console.log("res.result: ", res.result);
 						if (res.result.code === 0) {
-							uni.setStorageSync('uni_id_token',res.result.token)
+							uni.setStorageSync('uni_id_token', res.result.token)
 							uni.setStorageSync('uni_id_token_expired', res.result.tokenExpired)
 							uni.setStorageSync('uni_id_uid', res.result.uid)
 							

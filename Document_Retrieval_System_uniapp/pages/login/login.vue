@@ -13,7 +13,7 @@
 		</view>
 		<view class="buttom">
 			<view class="loginType">
-				<view class="wechat item">
+				<view class="wechat item" @click="logingByWechat">
 					<view class="icon">
 						<u-icon size="70" name="weixin-fill" color="rgb(83,194,64)"></u-icon>
 					</view>
@@ -25,6 +25,10 @@
 				<text class="link">用户协议、隐私政策，</text>
 				并授权使用您的账号信息（如昵称、头像、收获地址）以便您统一管理
 			</view>
+		</view>
+		
+		<view>
+			<u-toast ref="uToast" />
 		</view>
 	</view>
 </template>
@@ -107,7 +111,61 @@
 						})
 					}
 				})
-			}
+			},
+			
+			// 微信登录
+			logingByWechat() {
+				// Todo 登录的延时动画
+				let that = this
+				console.log("微信登录")
+				let LoginByWexinParams = {
+					code: '',
+					role: 'user'
+				}
+				
+				wx.login({
+				  success (res) {
+				    if (res.code) {
+				      console.log("wxcode", res)
+					  uniCloud.callFunction({
+					  	name: 'uni-id-center',
+					  	data: {
+					  		action: 'loginByWeixin',
+					  		params: {
+					  			code: res.code,
+					  			role: "['user']"
+					  		}
+					  	},
+					  	success(res) {
+					  		console.log("res: ", res);
+							uni.setStorageSync('uni_id_token', res.result.token)
+							uni.setStorageSync('uni_id_token_expired', res.result.tokenExpired)
+							uni.setStorageSync('uni_id_uid', res.result.uid)
+							
+							that.$refs.uToast.show({
+								title: res.result.msg,
+								type: 'success',
+								url: '/pages/retrieve/retrieve',
+								isTab: true,
+								duration: 2000,
+								type: "primary"
+							})
+					  	},
+					  	fail(e) {
+					  		console.error(e)
+					  		uni.showModal({
+					  			showCancel: false,
+					  			content: '登录失败，请稍后再试'
+					  		})
+					  	}
+					  })
+				    } else {
+				      console.log('登录失败！' + res.errMsg)
+				    }
+				  }
+				})
+				
+			},
 		}
 	};
 </script>

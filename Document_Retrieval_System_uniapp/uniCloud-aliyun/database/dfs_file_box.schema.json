@@ -26,7 +26,7 @@
 		"box_tags": {
 			"description": "拥有标签"
 		},
-		"box_isDelete": {
+		"box_is_deleted": {
 			"description": "是否删除"
 		},
 		"box_add_time": {

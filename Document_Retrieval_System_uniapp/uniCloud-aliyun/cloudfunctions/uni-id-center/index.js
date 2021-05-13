@@ -151,7 +151,8 @@ exports.main = async (event, context) => {
     }
     case 'loginByWeixin': {
       const {
-        code
+        code,
+		role
       } = params
       res = await uniID.loginByWeixin({
         code
