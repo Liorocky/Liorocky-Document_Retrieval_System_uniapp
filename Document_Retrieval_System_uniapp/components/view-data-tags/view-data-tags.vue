@@ -4,10 +4,10 @@
 			<swiper class="swiper" @change="change" circular=true>
 				<swiper-item v-for="i in pagesNum">
 					<u-grid :col="5">
-						<u-grid-item v-for="(item, index) in allTags" :index="item.id" :key="item.id" @click="clickTag(item)"
+						<u-grid-item v-for="(item, index) in allTags" :index="item._id" :key="item._id" @click="clickTag(item)"
 							:custom-style="{background: (item.selected ? '#a0cfff' : '#ffffff')}"
 							v-if="index >= (i - 1) * 15">
-							<text class="grid-text">{{ item.name + item.id }}</text>
+							<text class="grid-text">{{ item.tag_name }}</text>
 						</u-grid-item>
 					</u-grid>
 				</swiper-item>

@@ -1,27 +1,71 @@
 <template>
 	<view>
-		<view>
-			<u-form-item label="标题"><u-input v-model="uploadFileBox.box_title" /></u-form-item>
-			<u-form-item label="描述"><u-input v-model="uploadFileBox.box_desc" /></u-form-item>
+		<view v-if="this.selectedFiles.tempFiles.length > -1">
+			<u-card title="基本信息">
+				<view class="" slot="body">
+					<u-form-item label="标题"><u-input v-model="uploadFileBox.box_title" /></u-form-item>
+					<u-form-item label="描述"><u-input v-model="uploadFileBox.box_desc" /></u-form-item>
+					<view class="u-body-item u-flex u-row-between u-p-b-0">
+						<u-form-item label="标签"></u-form-item>
+						<u-input placeholder="请输入新标签名" maxlength=4 :clearable="false" input-align="left" v-model="addTagName" /><u-button @click="addTag">添加</u-button></u-form-item>
+					</view>
+					
+						<!-- 推荐标签 -->
+					<view v-if="bdTags.length > 0">
+						<u-form-item label="推荐">
+							<u-grid :col="4">
+								<u-grid-item id="grid-item-bd" v-for="(item, index) in bdTags" :index="item._id" :key="item._id" @click="clickTag(item)"
+									:custom-style="{background: (item.selected ? '#a0cfff' : '#ffffff')}">
+									<text class="grid-text">{{ item.tag_name }}</text>
+								</u-grid-item>
+							</u-grid>
+							
+						</u-form-item>
+						
+					</view>
+					
+					<view class="content">
+						<swiper class="swiper" @change="change" circular=true>
+							<swiper-item v-for="i in pagesNum">
+								<u-grid :col="5">
+									<u-grid-item v-for="(item, index) in allTags" :index="item._id" :key="item._id" @click="clickTag(item)"
+										:custom-style="{background: (item.selected ? '#a0cfff' : '#ffffff')}"
+										v-if="index >= (i - 1) * 15">
+										<text class="grid-text">{{ item.tag_name }}</text>
+									</u-grid-item>
+								</u-grid>
+							</swiper-item>
+						</swiper>
+					
+						<view class="indicator-dots" v-if="true">
+							<view v-if="selectedTags.length > 0">已选择{{ selectedTags.length }}个标签</view>
+							<view v-for="i in pagesNum">
+								<view class="indicator-dots-item" :class="[current == i - 1 ? 'indicator-dots-active' : '']"></view>
+							</view>
+						</view>
+					</view>
+					
+				</view>
+			</u-card>
 		</view>
 		
-		<view>
-			<button type="primary" @click="tagsViewShow = true">选择标签</button>
-			<button type="primary" @click="getLexer">测试百度</button>
-		</view>
+		<button v-if="this.selectedFiles.tempFiles.length > 0" type="primary" @click="upload">录入文件</button>
+		
+		<u-card title="文件信息">
+			<view class="" slot="body">
+				<view>
+					<uni-file-picker ref="files" v-model="fileListValue" fileMediatype="all" :list-styles="fileListStyles" mode="list"
+						@select="select" @progress="progress" @success="success" @fail="fail" :auto-upload="false">
+						<button>选择文件</button>
+					</uni-file-picker>
+					<button type="warn" v-if="this.selectedFiles.tempFiles.length > 0">清空所有</button>
+				</view>
+			</view>
+		</u-card>
+		
 		
 		<view>
-			<uni-file-picker ref="files" v-model="fileListValue" fileMediatype="all" :list-styles="fileListStyles" mode="list"
-				@select="select" @progress="progress" @success="success" @fail="fail" :auto-upload="false">
-				<button>选择文件</button>
-				</uni-file-picker>
-			<button type="primary" @click="upload">上传文件</button>
-		</view>
-		
-		<view>
-			<u-popup v-model="tagsViewShow" mode="top" height="390rpx">
-				<view-data-tags :selectedTags="selectedTags" :allTags="allTags" @clickTag="clickTags" @selectedTagsData="selectedTagsData"></view-data-tags>
-			</u-popup>
+			<u-toast ref="uToast" />
 		</view>
 	</view>
 </template>
@@ -75,14 +119,23 @@
 				},
 				tagsViewShow: false, // 是否显示标签pop
 				allTags: [],
-				selectedTags: [],
+				selectedTags: [], // 已选择的标签
 				uid: "",
 				selectedFiles: { // 选择的文件
 					tempFilePaths: [], // 文件url
 					tempFiles: [] // 文件对象
 				},
 				selectedFilesName: "", // 所有已选择的文件名
-				
+				addTagName: "", // 新标签名
+				current: 0, // 当前标签页面
+				bdTags: [], // 推荐标签
+				bdPos: new Set(['n', 'nz', 'nr', 'ns', 's', 'nt', 'nw']), // 百度词性
+				// n	普通名词	f	方位名词	s	处所名词	t	时间名词
+				// nr	人名	ns	地名	nt	机构团体名	nw	作品名
+				// nz	其他专名	v	普通动词	vd	动副词	vn	名动词
+				// a	形容词	ad	副形词	an	名形词	d	副词
+				// m	数量词	q	量词	r	代词	p	介词
+				// c	连词	u	助词	xc	其他虚词	w	标点符号
 			}
 		},
 		onShow() {
@@ -90,26 +143,20 @@
 			const uni_id_uid = uni.getStorageSync("uni_id_uid")
 			this.uid = uni_id_uid
 			console.log("uni_id_uid: ", this.uid);
+			
+			// 获取所有标签
+			this.getAllTags()
 		},
 		created() {
-			// 获取所有标签
+		},
+		computed: {
+			pagesNum: function() {
+				return Math.ceil(this.allTags.length / 15)
+			}
 		},
 		methods: {
-			// 词法分析
-			getLexer(data) {
-				uniCloud.callFunction({
-					name: 'baidu-ai',
-					data: {
-						action: 'lexer',
-						text: "百度是一家高科技公司"
-					}
-				}).then(res => {
-					console.log("lexerdata", res)
-				})
-			},
-			
 			// 获取上传状态
-			select(e) {
+			async select(e) {
 				console.log('选择文件：', e)
 				this.selectedFiles = e
 				this.selectedFiles.tempFiles.forEach(item => {
@@ -121,6 +168,28 @@
 				this.uploadFileBox.box_desc = this.selectedFiles.tempFiles[0].name
 				
 				// 生成智能标签
+				uniCloud.callFunction({
+					name: 'baidu-ai',
+					data: {
+						action: 'lexer',
+						text: this.selectedFilesName
+					}
+				}).then(res => {
+					res.result.data.items.forEach(item => {
+						if (this.bdPos.has(item.pos) && item.byte_length <= 12) {
+							let bdTag = {
+								tag_uid: this.uid,
+								tag_name: item.item
+							}
+							
+							// 不能添加重复标签、最多四个推荐标签
+							let tempTagName = this.bdTags.find(element => element.tag_name === item.item)
+							if ((typeof(tempTagName) === "undefined" || item.item !== tempTagName.tag_name) && this.bdTags.length < 4) {
+								this.bdTags.push(bdTag)
+							}
+						}
+					})
+				})
 			},
 			
 			// 获取上传进度
@@ -134,21 +203,29 @@
 				console.log("e: ", e);
 				const that = this
 				
-				// 将文档集信息写入数据库中
 				console.log("this.uploadFileBox", this.uploadFileBox)
 				this.uploadFileBox.box_count = e.tempFiles.length
 				this.uploadFileBox.box_uid = this.uid
 				this.uploadFileBox.box_add_time = new Date()
 				this.uploadFileBox.box_update_time = new Date()
 				
+				let box_tags = []
+				// 文档集标签信息
+				this.selectedTags.forEach(item => {
+					box_tags.push(item._id)
+				})
+				this.uploadFileBox.box_tags = box_tags
+				
 				// 获取数据库
 				const db = uniCloud.database()
 				
 				// 获取集合
 				const collection = db.collection('dfs_file_box')
+				
+				// 1. 将文档集信息写入数据库中
 				let fileBoxId = collection.add(this.uploadFileBox)
 				
-				// 将文件信息写入数据库中
+				// 2. 将文件信息写入数据库中
 				e.tempFiles.forEach( item => {
 					let uploadFile = {
 						file_box_id: fileBoxId,
@@ -164,7 +241,13 @@
 					// 上传uploadFile
 					// 获取集合
 					const collection = db.collection('dfs_file')
-					collection.add(uploadFile)
+					collection.add(uploadFile).then(res => {
+						this.$refs.uToast.show({
+							title: "录入成功",
+							duration: 1500,
+							type: "success"
+						})
+					})
 				})
 
 			},
@@ -179,20 +262,140 @@
 				this.$refs.files.upload()
 			},
 			
-			// 选择标签
-			clickTags(item) {
-				console.log("emit", item)
+			// 获取所有标签
+			getAllTags() {
+				// 获取数据库
+				const db = uniCloud.database()
+				
+				// 获取集合
+				const collection = db.collection('dfs_tag')
+				
+				collection.where('tag_uid == $cloudEnv_uid')
+				.get()
+				.then((res) => {
+					console.log("所有标签", res)
+					this.allTags = res.result.data
+					
+					// 遍历所有标签，添加是否选中属性
+					for (let i = 0; i < this.allTags.length; i++) {
+						for (let j = 0; j < this.selectedTags.length; j++) {
+							if (this.allTags[i]._id == this.selectedTags[j]._id) {
+								this.allTags[i].selected = true
+							}
+						}
+					}
+				})
 			},
 			
-			// 已选择的标签
-			selectedTagsData(data) {
-				this.selectedTags = data
-				console.log("tags", data)
+			// 新建标签
+			addTag() {
+				// 标签名不能为空
+				if (this.addTagName === '') return
+				
+				// 不能添加重复标签
+				let tempTagName = this.allTags.find(element => element.tag_name === this.addTagName)
+				if (typeof(tempTagName) !== "undefined" && this.addTagName === tempTagName.tag_name) {
+					this.$refs.uToast.show({
+						title: "不能添加重复标签",
+						duration: 1500,
+						type: "error"
+					})
+					return
+				}
+				
+				console.log("新建标签", this.addTagName)
+				// 获取数据库
+				const db = uniCloud.database()
+				
+				// 获取集合
+				const collection = db.collection('dfs_tag')
+				
+				// 标签信息
+				let newTag = {
+					tag_uid: this.uid,
+					tag_name: this.addTagName
+				}
+				
+				// 上传
+				collection.add(newTag).then(res => {
+					let _id = res.result.id
+					
+					let selectedTagsTemp = this.$u.deepClone(this.selectedTags)
+					
+					this.selectedTags = this.$u.deepClone(selectedTagsTemp)
+					
+					// 将标签信息放入 已选择标签中
+					let selectedTag = {
+						_id: _id,
+						selected: true,
+						tag_name: this.addTagName,
+						tag_uid: this.uid
+					}
+					
+					this.selectedTags.push(selectedTag)
+					
+					console.log("this.selectedTags", this.selectedTags)
+					console.log("this.this.allTags", this.allTags)
+					
+					// 获取所有标签
+					this.getAllTags()
+					
+					// 清空输入框
+					this.addTagName = ''
+				})
+			},
+			// 点击标签
+			clickTag(item) {
+				item.selected = item.selected === true ? false : true
+				if (item.selected) {
+					this.selectedTags.push(item)
+				} else {
+					this.selectedTags.pop(item)
+				}
+			},
+			// 标签页面改变
+			change(e) {
+				this.current = e.detail.current;
 			}
 		}
 	}
 </script>
 
 <style lang="scss">
+.indicator-dots {
+		margin-top: 40rpx;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
 
+	.indicator-dots-item {
+		background-color: $u-tips-color;
+		height: 6px;
+		width: 6px;
+		border-radius: 10px;
+		margin: 0 3px;
+	}
+
+	.indicator-dots-active {
+		background-color: $u-type-primary;
+	}
+
+	.swiper {
+		height: 290rpx;
+	}
+	
+	u-grid-item {
+		width: 33.3%;
+		height: 200rpx;
+		text-align: center;
+		line-height: 200rpx;
+	}
+	
+	#grid-item-bd {
+		width: 25%;
+		height: 100rpx;
+		text-align: center;
+		line-height: 200rpx;
+	}
 </style>

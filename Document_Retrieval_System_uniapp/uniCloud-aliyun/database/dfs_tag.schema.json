@@ -16,9 +16,6 @@
 		},
 		"tag_name": {
 			"description": "标签名"
-		},
-		"tag_boxId": {
-			"description": "所属文档集Id"
 		}
 	}
 }
