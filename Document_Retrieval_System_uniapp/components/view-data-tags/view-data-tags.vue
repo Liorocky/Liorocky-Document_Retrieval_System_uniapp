@@ -66,7 +66,7 @@
 				}
 				item.selected = item.selected === true ? false : true 
 				this.$emit("clickTag", item) // 点击的标签
-				this.$emit("selectedTagsData", Array.from(this.selectedTagsSet)) // 所有已选中的标签
+				this.$emit("selectedTags", Array.from(this.selectedTagsSet)) // 所有已选中的标签
 			},
 			change(e) {
 				this.current = e.detail.current;

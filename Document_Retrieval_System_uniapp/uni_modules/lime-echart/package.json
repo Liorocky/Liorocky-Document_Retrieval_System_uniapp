@@ -1,26 +1,23 @@
 {
-  "id": "uni-link",
-  "displayName": "uni-link 超链接",
-  "version": "0.0.4",
-  "description": "uni-link是一个外部网页超链接组件，在小程序内复制url，在app内打开外部浏览器，在h5端打",
+  "id": "lime-echart",
+  "displayName": "百度图表 echarts",
+  "version": "0.2.8",
+  "description": "全端兼容，一个基于 JavaScript 的开源可视化图表库",
   "keywords": [
-    "uni-ui",
-    "uniui",
-    "link",
-    "超链接",
-    ""
+    "echarts",
+    "canvas",
+    "图表",
+    "百度图表",
+    "全端"
 ],
-  "repository": "https://github.com/dcloudio/uni-ui",
+  "repository": "https://gitee.com/liangei/lime-echart",
   "engines": {
-    "HBuilderX": ""
-  },
-  "directories": {
-    "example": "../../temps/example_temps"
+    "HBuilderX": "^3.1.0"
   },
   "dcloudext": {
     "category": [
-      "前端组件",
-      "通用组件"
+        "前端组件",
+        "通用组件"
     ],
     "sale": {
       "regular": {
@@ -38,7 +35,7 @@
       "data": "无",
       "permissions": "无"
     },
-    "npmurl": "https://www.npmjs.com/package/@dcloudio/uni-ui"
+    "npmurl": ""
   },
   "uni_modules": {
     "dependencies": [],
@@ -61,9 +58,9 @@
         },
         "H5-pc": {
           "Chrome": "y",
-          "IE": "y",
-          "Edge": "y",
-          "Firefox": "y",
+          "IE": "u",
+          "Edge": "u",
+          "Firefox": "u",
           "Safari": "y"
         },
         "小程序": {
@@ -74,8 +71,8 @@
           "QQ": "y"
         },
         "快应用": {
-          "华为": "y",
-          "联盟": "y"
+          "华为": "u",
+          "联盟": "u"
         }
       }
     }

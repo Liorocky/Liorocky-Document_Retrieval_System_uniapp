@@ -11,11 +11,8 @@
 					<view class="file-item-content">
 						<view class="file-item-title">{{item.box_title}}</view>
 						
-						<view class="file-item-tag">
-							<u-tag text="财务" size="mini" mode="dark" :closeable="false"/>
-							<u-tag text="财务" size="mini" mode="dark" :closeable="false"/>
-							<u-tag text="财务" size="mini" mode="dark" :closeable="false"/>
-							<u-tag text="财务" size="mini" mode="dark" :closeable="false"/>
+						<view class="file-item-tag" >
+							<u-tag v-for="tag in item.box_tags" :text=tag.tag_name size="mini" mode="dark" :closeable="false"/>
 						</view>
 
 					</view>
@@ -36,10 +33,16 @@
 					return []
 				}
 			},
+			
+		},
+		data() {
+			return {
+				tagsData: [], // 标签数据
+			};
 		},
 		//组件生命周期
 		created: function(e) {
-
+			
 		},
 		methods: {
 			clickBox: function(item) {

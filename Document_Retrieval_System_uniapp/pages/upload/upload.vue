@@ -1,13 +1,13 @@
 <template>
 	<view>
-		<view v-if="this.selectedFiles.tempFiles.length > -1">
+		<view v-if="this.selectedFiles.tempFiles.length > 0">
 			<u-card title="基本信息">
 				<view class="" slot="body">
 					<u-form-item label="标题"><u-input v-model="uploadFileBox.box_title" /></u-form-item>
 					<u-form-item label="描述"><u-input v-model="uploadFileBox.box_desc" /></u-form-item>
 					<view class="u-body-item u-flex u-row-between u-p-b-0">
 						<u-form-item label="标签"></u-form-item>
-						<u-input placeholder="请输入新标签名" maxlength=4 :clearable="false" input-align="left" v-model="addTagName" /><u-button @click="addTag">添加</u-button></u-form-item>
+						<u-input placeholder="请输入新标签名" maxlength=4 :clearable="false" input-align="left" v-model="addTagName" /><u-button @click="clickNewTag">添加</u-button></u-form-item>
 					</view>
 					
 						<!-- 推荐标签 -->
@@ -49,20 +49,19 @@
 			</u-card>
 		</view>
 		
-		<button v-if="this.selectedFiles.tempFiles.length > 0" type="primary" @click="upload">录入文件</button>
+		<u-button v-if="this.selectedFiles.tempFiles.length > 0" type="primary" @click="upload">录入文件</u-button>
 		
 		<u-card title="文件信息">
 			<view class="" slot="body">
 				<view>
 					<uni-file-picker ref="files" v-model="fileListValue" fileMediatype="all" :list-styles="fileListStyles" mode="list"
 						@select="select" @progress="progress" @success="success" @fail="fail" :auto-upload="false">
-						<button>选择文件</button>
+						<u-button>选择文件</u-button>
 					</uni-file-picker>
-					<button type="warn" v-if="this.selectedFiles.tempFiles.length > 0">清空所有</button>
+					<u-button type="error" v-if="this.selectedFiles.tempFiles.length > 0" @click="clearAll">清空所有</u-button>
 				</view>
 			</view>
 		</u-card>
-		
 		
 		<view>
 			<u-toast ref="uToast" />
@@ -120,6 +119,7 @@
 				tagsViewShow: false, // 是否显示标签pop
 				allTags: [],
 				selectedTags: [], // 已选择的标签
+				selectedBdTags: [], // 已选择的推荐标签
 				uid: "",
 				selectedFiles: { // 选择的文件
 					tempFilePaths: [], // 文件url
@@ -198,7 +198,7 @@
 			},
 
 			// 上传成功
-			success(e) {
+			async success(e) {
 				console.log('上传成功')
 				console.log("e: ", e);
 				const that = this
@@ -210,10 +210,22 @@
 				this.uploadFileBox.box_update_time = new Date()
 				
 				let box_tags = []
+				
 				// 文档集标签信息
-				this.selectedTags.forEach(item => {
-					box_tags.push(item._id)
-				})
+				for (let i = 0; i < this.selectedTags.length; i++) {
+					if (typeof(this.selectedTags[i]._id) === "undefined") {
+						console.log("undefinedtag", this.selectedTags[i])
+						
+						// 推荐标签
+						let res = await this.addTag(this.selectedTags[i].tag_name)
+						
+						this.selectedTags[i]._id = res._id
+						box_tags.push(this.selectedTags[i]._id)
+					} else {
+						box_tags.push(this.selectedTags[i]._id)
+					}
+				}
+
 				this.uploadFileBox.box_tags = box_tags
 				
 				// 获取数据库
@@ -223,7 +235,8 @@
 				const collection = db.collection('dfs_file_box')
 				
 				// 1. 将文档集信息写入数据库中
-				let fileBoxId = collection.add(this.uploadFileBox)
+				let fileBoxId = await collection.add(this.uploadFileBox)
+				fileBoxId = fileBoxId.result.id
 				
 				// 2. 将文件信息写入数据库中
 				e.tempFiles.forEach( item => {
@@ -287,8 +300,8 @@
 				})
 			},
 			
-			// 新建标签
-			addTag() {
+			// 点击新建标签
+			async clickNewTag() {
 				// 标签名不能为空
 				if (this.addTagName === '') return
 				
@@ -303,47 +316,46 @@
 					return
 				}
 				
-				console.log("新建标签", this.addTagName)
+				// 新建标签
+				let tempTag = await this.addTag(this.addTagName)
+				
+				this.selectedTags.push(tempTag)
+				
+				// 获取所有标签
+				this.getAllTags()
+				
+				// 清空输入框
+				this.addTagName = ''
+			},
+			
+			// 新建标签 返回标签信息
+			async addTag(tagName) {
 				// 获取数据库
 				const db = uniCloud.database()
-				
 				// 获取集合
 				const collection = db.collection('dfs_tag')
-				
 				// 标签信息
-				let newTag = {
+				let temp = {
 					tag_uid: this.uid,
-					tag_name: this.addTagName
+					tag_name: tagName
 				}
 				
 				// 上传
-				collection.add(newTag).then(res => {
-					let _id = res.result.id
-					
-					let selectedTagsTemp = this.$u.deepClone(this.selectedTags)
-					
-					this.selectedTags = this.$u.deepClone(selectedTagsTemp)
-					
-					// 将标签信息放入 已选择标签中
-					let selectedTag = {
-						_id: _id,
-						selected: true,
-						tag_name: this.addTagName,
-						tag_uid: this.uid
-					}
-					
-					this.selectedTags.push(selectedTag)
-					
-					console.log("this.selectedTags", this.selectedTags)
-					console.log("this.this.allTags", this.allTags)
-					
-					// 获取所有标签
-					this.getAllTags()
-					
-					// 清空输入框
-					this.addTagName = ''
-				})
+				let res = await collection.add(temp)
+				let _id = res.result.id
+				
+				// 将标签信息放入 已选择标签中
+				let resTag = {
+					_id: _id,
+					selected: true,
+					tag_name: tagName,
+					tag_uid: this.uid
+				}
+				
+				console.log("新建标签成功", resTag)
+				return resTag
 			},
+			
 			// 点击标签
 			clickTag(item) {
 				item.selected = item.selected === true ? false : true
@@ -356,6 +368,12 @@
 			// 标签页面改变
 			change(e) {
 				this.current = e.detail.current;
+			},
+			// 清空所有
+			clearAll() {
+				uni.reLaunch({
+					url: "/pages/upload/upload"
+				})
 			}
 		}
 	}

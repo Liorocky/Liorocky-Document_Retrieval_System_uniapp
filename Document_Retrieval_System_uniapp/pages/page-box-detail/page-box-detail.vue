@@ -1,67 +1,77 @@
 <template>
 	<view>
 		<!-- 标题&描述 -->
-		<view class="">
-			<u-form :model="fileBoxForm" ref="fileBoxForm">
-				<u-form-item label="" prop="title" label-position="left" left-icon="info">
-					<u-input v-model="fileBoxForm.title" disabled/>
-				</u-form-item>
-				<u-form-item label="" prop="desc" label-position="left" left-icon="file-text">
-					<u-input v-model="fileBoxForm.desc" auto-height />
-				</u-form-item>
-			</u-form>
-		</view>
-		
-		<!-- 标签 -->
-		<view>
+		<u-card title="基本信息">
+			<view class="" slot="body">
+				<u-form-item label="标题"><u-input :disabled="!isEdit" v-model="fileBoxForm.box_title" /></u-form-item>
+				<u-form-item label="描述"><u-input :disabled="!isEdit" v-model="fileBoxForm.box_desc" /></u-form-item>
 			
-		</view>
-		
-		<!-- 分割线 -->
-		<view>
-			<u-line color="primary" border-style="dashed"></u-line>
-		</view>
+				<u-form-item label="标签">
+					<u-grid :col="5">
+						<u-grid-item v-for="(item, index) in fileBoxForm.box_tags" :index="item._id" :key='item._id'>
+							<text class="grid-text">{{ item.tag_name }}</text>
+						</u-grid-item>
+					</u-grid>
+				</u-form-item>
+				
+			</view>
+		</u-card>
 		
 		<!-- 文件 -->
-		<view>
-		<!-- <file-data-box></file-data-box> -->
-			
-		</view>
+		<u-card title="文件信息">
+			<view class="" slot="body">
+				<view-data-file :filesData="filesData"></view-data-file>
+			</view>
+		</u-card>
+		
+		<u-card title="操作">
+			<view class="" slot="body">
+				<u-button type="primary">分享</u-button>
+				<u-button>编辑</u-button>
+				<u-button type="error">删除</u-button>
+			</view>
+		</u-card>
 	</view>
 
 </template>
 
 <script>
 	export default {
-		onLoad: function(option) { //option为object类型，会序列化上个页面传递的参数
+		onLoad: function(option) {
+			//option为object类型，会序列化上个页面传递的参数
 			const item = JSON.parse(decodeURIComponent(option.item));
-			// uni.$once('clickBox', this.setFileBoxData)
 			console.log("item: ", item);
 			this.fileBoxForm = item
+			
+			// 查询文件信息
+			const db = uniCloud.database()
+			const collection = db.collection("dfs_file")
+			collection.where('file_box_id == "' + this.fileBoxForm._id + '"')
+			.get()
+			.then(res => {
+				this.filesData = res.result.data
+			})
 		},
 		data() {
 			return {
 				fileBoxForm: {},
-				isNotEditable: true // 是否不可编辑
+				isEdit: false, // 是否编辑模式
+				filesData: [], // 文件信息
 			}
 		},
 		beforeCreate() {},
 		mounted() {},
 		methods: {
-			// setFileBoxData(data) {
-			// 	console.log(data, 'data')
-			// 	console.log("this.fileBoxData: ",this.fileBoxData);
-			// 	this.fileBoxData.title = data.title
-			// 	console.log(this.fileBoxData, "2")
-			// 	this.fileBoxData.title = "332"
-			// 	this.$forceUpdate();
-			// }
+			
 		}
 	}
 </script>
 
 <style lang="scss">
-	// u-line {
-	// 	color: $u-type-primary;
-	// }
+u-grid-item {
+		width: 33.3%;
+		height: 200rpx;
+		text-align: center;
+		line-height: 200rpx;
+	}
 </style>
