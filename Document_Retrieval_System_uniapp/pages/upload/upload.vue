@@ -56,7 +56,7 @@
 				<view>
 					<uni-file-picker ref="files" v-model="fileListValue" fileMediatype="all" :list-styles="fileListStyles" mode="list"
 						@select="select" @progress="progress" @success="success" @fail="fail" :auto-upload="false">
-						<u-button>选择文件</u-button>
+						<button>选择文件</button>
 					</uni-file-picker>
 					<u-button type="error" v-if="this.selectedFiles.tempFiles.length > 0" @click="clearAll">清空所有</u-button>
 				</view>

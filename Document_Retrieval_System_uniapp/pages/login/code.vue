@@ -178,7 +178,7 @@
 			// 开启验证码倒计时
 			startInterval() {
 				// this.second = this.expMinute
-				this.second = 3
+				this.second = 60
 				this.interval = setInterval(() => {
 					this.second--;
 					if (this.second <= 0) {

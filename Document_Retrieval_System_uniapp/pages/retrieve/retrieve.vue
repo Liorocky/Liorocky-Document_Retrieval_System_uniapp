@@ -19,7 +19,7 @@
 		</view>
 
 		<view>
-			<u-popup v-model="tagsViewShow" @close="search()" @open="openpop" mode="top" height="390rpx">
+			<u-popup v-model="tagsViewShow" @close="search()" mode="top" height="390rpx">
 				<view-data-tags :selectedTags="selectedTagsArr" :allTags="allTags" @clickTag="clickTags" @selectedTags="selectedTags"></view-data-tags>
 			</u-popup>
 		</view>
@@ -45,8 +45,6 @@
 			const uni_id_uid = uni.getStorageSync("uni_id_uid")
 			this.uid = uni_id_uid
 			console.log("uni_id_uid: ", this.uid);
-			
-			
 		},
 		methods: {
 			// 获取所有标签
@@ -91,7 +89,7 @@
 				console.log("title: " + title + ',' + 'tags' + tags)
 				// 获取集合
 				const collection = db.collection('dfs_file_box')
-				.where('box_uid == $cloudEnv_uid && ' + '/' + title + '/.test(box_title)')
+				.where('box_uid == $cloudEnv_uid && ' + '/' + title + '/.test(box_title) && box_is_deleted == 0')
 				.get()
 				.then(res => {
 					this.fileBoxShow = false
